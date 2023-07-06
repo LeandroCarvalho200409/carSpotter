@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, View, Image } from 'react-native';
 import Page from '../components/Page';
 import { useRouter, Stack } from 'expo-router'
-import Carlist from '../components/'
+import Carlist from '../components/CarList'
 
 
 export default function App() {
@@ -18,6 +18,7 @@ export default function App() {
   />
       <View style={styles.container}>
         <Page></Page>
+        <Carlist></Carlist>
         <Pressable style={styles.button} onPress={() => navigation.push("/newEntry")}>
           <Image style={styles.image} source={require('../assets/wheel.png')}>
           </Image>
