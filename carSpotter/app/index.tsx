@@ -1,18 +1,30 @@
+
 import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, View, Image } from 'react-native';
-import Page from './components/Page';
+import Page from '../components/Page';
+import { useRouter, Stack } from 'expo-router'
+import Carlist from '../components/'
+
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Page></Page>
-      <Pressable style={styles.button}>
-        <Image style={styles.image} source={require('./assets/wheel.png')}>
+  const navigation = useRouter();
 
-        </Image>
-      </Pressable>
-      <StatusBar style="auto" />
-    </View>
+  return (
+    <>
+    <Stack.Screen
+    options={{
+      title: "Homepage",
+    }}
+  />
+      <View style={styles.container}>
+        <Page></Page>
+        <Pressable style={styles.button} onPress={() => navigation.push("/newEntry")}>
+          <Image style={styles.image} source={require('../assets/wheel.png')}>
+          </Image>
+        </Pressable>
+        <StatusBar style="auto" />
+      </View>
+      </>
   );
 }
 
