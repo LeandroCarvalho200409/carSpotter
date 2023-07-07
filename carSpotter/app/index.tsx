@@ -4,10 +4,39 @@ import { Pressable, StyleSheet, View, Image } from 'react-native';
 import Page from '../components/Page';
 import { useRouter, Stack } from 'expo-router'
 import Carlist from '../components/CarList'
+import { PermissionsAndroid } from "react-native";
+import { useEffect } from 'react';
 
 
 export default function App() {
   const navigation = useRouter();
+
+  const requestStoragePermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: "Storage reading",
+          message:
+            "We need permission to access your storage",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK",
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("You can use the EXTERNAL_STORAGE");
+      } else {
+        console.log("EXTERNAL_STORAGE permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  useEffect(() => {
+    requestStoragePermission()
+  }, [])
 
   return (
     <>

@@ -3,6 +3,7 @@ import { Stack, useSearchParams, useRouter } from "expo-router";
 import { StyleSheet } from "react-native";
 import Page from '../../../components/Page'
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import MapView from 'react-native-maps';
 
 export default function CarEntry (){
 
@@ -10,6 +11,9 @@ export default function CarEntry (){
 
     const { id } = useSearchParams();
     var object = JSON.parse(id)
+    var location = object.location
+    console.log("Location")
+    console.log(location.coords.latitude)
 
     async function deleteItem() {
         var storage = await AsyncStorage.getItem('carsList4')
@@ -62,6 +66,16 @@ export default function CarEntry (){
                 <Text style={styles.text}>Year: {object.year}</Text>
                 <Text style={styles.text}>Fuel: {object.fuel}</Text>
                 <Text style={styles.text}>Version: {object.version}</Text>
+                <View style={styles.mapContainer}>
+                <MapView style={styles.map}
+                initialRegion={{
+                    latitude: location.coords.latitude,
+                    longitude: -location.coords.longitude,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                  }}
+                />
+                </View>
             </View>
         </View>
         </>
@@ -111,5 +125,12 @@ const styles = StyleSheet.create({
     deleteIcon: {
         width: 20,
         height: 20,
-    }
+    },
+    mapContainer: {
+        width: 300,
+        height: 150
+    },
+    map: {
+        ...StyleSheet.absoluteFillObject,    
+    },
 })

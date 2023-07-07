@@ -1,9 +1,12 @@
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { View, StyleSheet, Text, TextInput, Pressable } from "react-native";
+import { View, StyleSheet, Text, TextInput, Pressable, PermissionsAndroid, Button } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from "@react-native-picker/picker";
-import Camera from "./Camera";
+import CameraComponent from "./Camera";
+import Geolocation from 'react-native-geolocation-service';
+
+import * as Location from 'expo-location';
 
 export default function EntryForm(){
     const navigation = useRouter();
@@ -14,6 +17,9 @@ export default function EntryForm(){
     const [yearValue, setYear] = useState("")
     const [fuelValue, setFuel] = useState("")
     const [versionValue, setVersion] = useState("")
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+
     const url = 'https://car-data.p.rapidapi.com/cars/makes';
     const options = {
 	    method: 'GET',
@@ -39,11 +45,26 @@ export default function EntryForm(){
             }
         }
 
+        (async () => {
+      
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            console.log("Status: "+status)
+            if (status !== 'granted') {
+              setErrorMsg('Permission to access location was denied');
+              return;
+            }
+      
+            let location = await Location.getCurrentPositionAsync({});
+            setLocation(location);
+            console.log("Location: "+JSON.stringify(location))
+          })();
+
         fetchMakes()
     }, [])
+  
 
     async function saveData(){
-        var object = {make: selectedMake, model: modelValue, year: yearValue, fuel: fuelValue, version: versionValue}
+        var object = {make: selectedMake, model: modelValue, year: yearValue, fuel: fuelValue, version: versionValue, location: location}
         console.log(modelValue)
         if(await AsyncStorage.getItem('carsList4') !== null){
             var storageString = await AsyncStorage.getItem('carsList4')
@@ -73,7 +94,7 @@ export default function EntryForm(){
     return(
         <View style={styles.container}>
             <Text style={styles.subtitle}>New Entry</Text>
-            <Camera></Camera>
+            <CameraComponent></CameraComponent>
             <Text style={styles.label}>Make: </Text>
             <View style={styles.border}>
             <Picker

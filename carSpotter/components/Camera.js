@@ -1,11 +1,52 @@
-import { StyleSheet, Pressable, Image } from "react-native";
+import { StyleSheet, Pressable, Image, View, TouchableOpacity, Text, Button } from "react-native";
+import { useState, useRef, useEffect } from "react";
+import { Camera, CameraType } from 'expo-camera'
+import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Camera(){
+
+export default function CameraComponent(props){
+    const [status, requestPermission] = Camera.useCameraPermissions();
+    const navigation = useRouter();
+    const [photoURIState, setPhotoURIState] = useState('../assets/dslr-camera.png')
+
+    
+    useEffect(() => {
+        async function getPhoto(){
+            var photoURI = await AsyncStorage.getItem('photo')
+            console.log(photoURI)
+            if(photoURI !== null){
+                setPhotoURIState(photoURI)
+                photo = photoURI
+            }
+        }
+
+        const interval = setInterval(() => {
+            getPhoto()
+          }, 1000);
+          return () => clearInterval(interval);
+    }, [])
+
+  if (!status?.granted) {
+    return (
+      <View
+        style={{ flex: 1, justifyContent: "center", alignContent: "center" }}
+      >
+        <Text style={{ textAlign: "center" }}>
+          We need access to your camera
+        </Text>
+        <Button onPress={requestPermission} title="Grant permission" />
+      </View>
+    );
+  }
+
     return(
-        <Pressable style={styles.container}>
-            <Image style={styles.image} source={require('../assets/dslr-camera.png')}>
-            </Image>
-        </Pressable>
+        <View>
+            <Pressable style={styles.container} onPress={() => navigation.push('/camera')}>
+                <Image source={{ uri: photoURIState }}>
+                </Image>
+            </Pressable>
+        </View>
     );
 }
 
@@ -18,6 +59,14 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    button: {
+        backgroundColor: '#d9d9d9',
+        width: 303,
+        height: 147,
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     image: {
         maxHeight: 80,
