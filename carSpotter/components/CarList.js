@@ -11,16 +11,18 @@ export default function CarList(){
 
     useEffect(() => {
         async function getData(){
-            var storage = await AsyncStorage.getItem('carsList3')
-            var storageArray = storage.split(";")
-            var objectArray = []
+            var storage = await AsyncStorage.getItem('carsList4')
+            if(storage !== null){
+                var storageArray = storage.split(";")
+                var objectArray = []
 
-            for(let i=0; i<storageArray.length; i++){
-                var object = JSON.parse(storageArray[i])
-                objectArray.push(object)
+                for(let i=0; i<storageArray.length; i++){
+                    var object = JSON.parse(storageArray[i])
+                    objectArray.push(object)
+                }
+
+                setData(objectArray)
             }
-
-            setData(objectArray)
         }
 
         const interval = setInterval(() => {

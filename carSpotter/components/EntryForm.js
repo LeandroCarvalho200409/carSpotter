@@ -45,9 +45,11 @@ export default function EntryForm(){
     async function saveData(){
         var object = {make: selectedMake, model: modelValue, year: yearValue, fuel: fuelValue, version: versionValue}
         console.log(modelValue)
-        if(await AsyncStorage.getItem('carsList3') !== null){
-            var storageString = await AsyncStorage.getItem('carsList3')
+        if(await AsyncStorage.getItem('carsList4') !== null){
+            var storageString = await AsyncStorage.getItem('carsList4')
             var storageArray = storageString.split(';')
+            var index = storageArray.length
+            object.id = index
             storageArray.push(JSON.stringify(object))
             console.log(storageArray)
             var newStorageString = ""
@@ -59,10 +61,10 @@ export default function EntryForm(){
                 }
             })
             console.log(newStorageString)
-            await AsyncStorage.setItem('carsList3', newStorageString)
+            await AsyncStorage.setItem('carsList4', newStorageString)
         }else{
 
-            AsyncStorage.setItem('carsList3', JSON.stringify(object))
+            AsyncStorage.setItem('carsList4', JSON.stringify(object))
         }
 
         navigation.back()

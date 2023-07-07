@@ -1,12 +1,39 @@
 import { View, Text, Image, Pressable } from "react-native";
-import { Stack, useSearchParams } from "expo-router";
+import { Stack, useSearchParams, useRouter } from "expo-router";
 import { StyleSheet } from "react-native";
 import Page from '../../../components/Page'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function CarEntry (){
 
+    const navigation = useRouter();
+
     const { id } = useSearchParams();
     var object = JSON.parse(id)
+
+    async function deleteItem() {
+        var storage = await AsyncStorage.getItem('carsList4')
+        console.log(storage)
+        var storageArray = storage.split(';')
+        var newStorageArray = []
+        for(let i=0; i<storageArray.length; i++){
+            if(i !== object.id){
+                newStorageArray.push(storageArray[i])
+            }
+        }
+        var newStorageString = ""
+        for(let i=0; i<newStorageArray.length; i++){
+            newStorageString = newStorageString + newStorageArray[i]
+
+            if(i !== (newStorageArray.length-1)){
+                newStorageString = newStorageString + ";"
+            }
+        }
+        console.log(newStorageString)
+        await AsyncStorage.setItem('carsList4', newStorageString)
+
+        navigation.back()
+    }
 
     return(
         <>
@@ -23,7 +50,7 @@ export default function CarEntry (){
                         <Text style={styles.subtitle}>{object.make} {object.model} {object.version}</Text>
                         <Text style={styles.text}>2022-12-23</Text>
                     </View>
-                    <Pressable style={styles.deleteButton}>
+                    <Pressable style={styles.deleteButton} onPress={(e) => deleteItem()}>
                         <Image style={styles.deleteIcon} source={require('../../../assets/delete.png')}>
 
                         </Image>
