@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList, Text, View, StyleSheet, Pressable, Image } from "react-native";
+import { useRouter } from 'expo-router';
 
 export default function CarList(){
     const [data, setData] = useState()
+
+    const navigation = useRouter();
 
 
     useEffect(() => {
@@ -32,7 +35,7 @@ export default function CarList(){
             <Text style={styles.subtitle}>My Entries</Text>
             <FlatList
             data={data}
-            renderItem={({item}) => <Pressable style={styles.entry}>
+            renderItem={({item, idx}) => <Pressable style={styles.entry} onPress={(e) => navigation.push('/entry/'+JSON.stringify(item))}>
                 <View style={styles.entryContainer}>
                     <Image style={styles.image} source={require('../assets/brabus-e-v12.jpg')}></Image>
                     <View>

@@ -12,6 +12,7 @@ export default function NewEntry(){
             }}
             />
             <View style={styles.container}>
+                <Page></Page>
                 <EntryForm></EntryForm>
             </View>
         </>

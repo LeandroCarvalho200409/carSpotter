@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     },
     container: {
         backgroundColor: '#2e2e2d',
-        marginTop: 30,
+        marginTop: 10,
         marginBottom: 'auto',
       },
       picker: {
